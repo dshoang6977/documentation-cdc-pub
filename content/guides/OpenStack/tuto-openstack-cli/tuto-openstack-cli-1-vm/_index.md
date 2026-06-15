@@ -7,9 +7,10 @@ type: docs
 
 ## Création d'une VM dans OpenStack
 
-### Informations nécessaire
+### Informations nécessaires
 
 Information nécessaires pour créer une VM sur OpenStack:
+
 - Création du réseau
 - Création du subnet
 - Création du security group
@@ -28,7 +29,23 @@ openstack security group rule create --ingress --protocol icmp <SG_NAME>
 ```
 
 
-### exécution des commandes
+### Exemple d'exécution des commandes
+
+#### Notes
+
+Dans les exemples suivants, nous allons utiliser les valeurs suivantes:
+
+- <NOM_RESEAU> : dsh-net
+- <NOM_SUBNET> : dsh-subnet
+- <SG_NAME> :  dsh-sg
+
+Ces valeurs sont arbitraires et ne sont là que pour illustrer ce tutoriel.
+A ajuster par rapport à votre contexte.
+
+
+#### Exemples
+
+##### Création du réseau pour la future VM
 
 ```Shell
 (oskclient) ko@cdc:~/restos/openstack$ openstack network create dsh-net
@@ -66,7 +83,12 @@ openstack security group rule create --ingress --protocol icmp <SG_NAME>
 | updated_at                | 2026-04-20T19:58:00Z                 |
 +---------------------------+--------------------------------------+
 (oskclient) ko@cdc:~/restos/openstack$ 
-(oskclient) ko@cdc:~/restos/openstack$ 
+```
+
+
+##### Création du sous-réseau IP interne pour la VM
+
+```Shell
 (oskclient) ko@cdc:~/restos/openstack$ openstack subnet create --network dsh-net --subnet-range 192.168.100.0/24 dsh-subnet
 +----------------------+--------------------------------------+
 | Field                | Value                                |
@@ -95,8 +117,13 @@ openstack security group rule create --ingress --protocol icmp <SG_NAME>
 | tags                 |                                      |
 | updated_at           | 2026-04-20T20:01:22Z                 |
 +----------------------+--------------------------------------+
-(oskclient) ko@cdc:~/restos/openstack$ 
-(oskclient) ko@cdc:~/restos/openstack$ 
+(oskclient) ko@cdc:~/restos/openstack$
+```
+
+
+##### Création du groupe de sécurité
+
+```Shell
 (oskclient) ko@cdc:~/restos/openstack$ openstack security group create --stateful dsh-sg
 +-----------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
 | Field           | Value                                                                                                                                            |
@@ -117,11 +144,21 @@ openstack security group rule create --ingress --protocol icmp <SG_NAME>
 | updated_at      | 2026-04-20T20:04:55Z                                                                                                                             |
 +-----------------+--------------------------------------------------------------------------------------------------------------------------------------------------+
 (oskclient) ko@cdc:~/restos/openstack$ 
-(oskclient) ko@cdc:~/restos/openstack$ 
+```
+
+
+##### Création des régles de sécurité associées au groupe de sécurité
+
+```Shell
 (oskclient) ko@cdc:~/restos/openstack$ openstack security group rule create --egress dsh-sg
 Error while executing command: ConflictException: 409, Security group rule already exists. Rule id is 1c347cc8-3be0-409b-ad57-708ccf64d678.
 (oskclient) ko@cdc:~/restos/openstack$ 
-(oskclient) ko@cdc:~/restos/openstack$ 
+```
+
+
+###### Accepte les connexions SSH en TCP sur le port IP 22
+
+```Shell
 (oskclient) ko@cdc:~/restos/openstack$ openstack security group rule create --ingress --dst-port 22:22 --protocol tcp dsh-sg
 +-------------------------+--------------------------------------+
 | Field                   | Value                                |
@@ -145,8 +182,12 @@ Error while executing command: ConflictException: 409, Security group rule alrea
 | updated_at              | 2026-04-20T20:08:42Z                 |
 +-------------------------+--------------------------------------+
 (oskclient) ko@cdc:~/restos/openstack$ 
-(oskclient) ko@cdc:~/restos/openstack$ 
-(oskclient) ko@cdc:~/restos/openstack$ 
+```
+
+
+###### Accepte les connexions TCP sur les ports IP 5001 à 5002
+
+```Shell
 (oskclient) ko@cdc:~/restos/openstack$ openstack security group rule create --ingress --dst-port 5001:5002 --protocol tcp dsh-sg
 +-------------------------+--------------------------------------+
 | Field                   | Value                                |
@@ -170,8 +211,12 @@ Error while executing command: ConflictException: 409, Security group rule alrea
 | updated_at              | 2026-04-20T20:09:35Z                 |
 +-------------------------+--------------------------------------+
 (oskclient) ko@cdc:~/restos/openstack$ 
-(oskclient) ko@cdc:~/restos/openstack$ 
-(oskclient) ko@cdc:~/restos/openstack$ 
+```
+
+
+###### Accepte les pings en entrée
+
+ ```
 (oskclient) ko@cdc:~/restos/openstack$ openstack security group rule create --ingress --protocol icmp dsh-sg
 +-------------------------+--------------------------------------+
 | Field                   | Value                                |
@@ -200,7 +245,7 @@ Error while executing command: ConflictException: 409, Security group rule alrea
 
 ## Création de VMs
 
-### Commandes à passer
+### Commandes à exécuter
 
 ```Shell
 openstack server create --flavor a1-ram2-disk10-perf1 --image debian-13 --network <NOM_RESEAU> --key <KEY> --security-group <SG_NAME> <VM_NAME>
@@ -214,7 +259,31 @@ openstack server add floating ip <VM_NAME> 151.242.68.XXX
 ```
 
 
-### Exécution des commandes
+### Exemple d'exécution des commandes
+
+#### Notes
+
+Dans les exemples suivants, nous allons utiliser les valeurs suivantes:
+
+<NOM_RESEAU>, <NOM_SUBNET> et <SG_NAME> comme pour l'exemple précédent.
+
+Plus les nouveaux éléments suivants :
+- <KEY> : dsh-admin
+  nom de la clé SSH asymétrique que vous avez ajouté pour ce projet? #TODO
+- <VM_NAME> : test-say-1
+  nom du futur objet VM
+- <RT_NAME> : dsh-rt
+  nom du futur objet routeur
+
+
+Ces valeurs sont arbitraires et ne sont là que pour illustrer ce tutoriel.
+A ajuster par rapport à votre contexte.
+
+
+#### Exemples
+
+
+##### Création de la VM
 
 ```Shell
 (oskclient) ko@cdc:~/restos/openstack$ openstack server create --flavor a1-ram2-disk10-perf1 --image debian-13 --network dsh-net --key dsh-admin --security-group dsh-sg test-say-1
@@ -270,7 +339,12 @@ openstack server add floating ip <VM_NAME> 151.242.68.XXX
 | volumes_attached                    |                                                                                                                              |
 +-------------------------------------+------------------------------------------------------------------------------------------------------------------------------+
 (oskclient) ko@cdc:~/restos/openstack$ 
-(oskclient) ko@cdc:~/restos/openstack$ 
+```
+
+
+##### Création du routeur
+
+```Shell
 (oskclient) ko@cdc:~/restos/openstack$ openstack router create dsh-rt
 +-------------------------+--------------------------------------+
 | Field                   | Value                                |
@@ -293,9 +367,26 @@ openstack server add floating ip <VM_NAME> 151.242.68.XXX
 | updated_at              | 2026-04-20T20:21:14Z                 |
 +-------------------------+--------------------------------------+
 (oskclient) ko@cdc:~/restos/openstack$ 
-(oskclient) ko@cdc:~/restos/openstack$ 
+```
+
+
+##### Ajout du sous-réseau et de la passerelle Internet au routeur
+
+```Shell
 (oskclient) ko@cdc:~/restos/openstack$ openstack router add subnet dsh-rt dsh-subnet
+```
+
+
+##### Ajout de la passerelle par défaut Internet au routeur
+
+```Shell
 (oskclient) ko@cdc:~/restos/openstack$ openstack router set --external-gateway public_interco dsh-rt
+```
+
+
+##### Demande de réservation d'une adresse IP publique
+
+```Shell
 (oskclient) ko@cdc:~/restos/openstack$ openstack floating ip create public_interco
 +---------------------+--------------------------------------+
 | Field               | Value                                |
@@ -322,12 +413,20 @@ openstack server add floating ip <VM_NAME> 151.242.68.XXX
 | updated_at          | 2026-04-20T20:24:16Z                 |
 +---------------------+--------------------------------------+
 (oskclient) ko@cdc:~/restos/openstack$ 
+```
+
+
+##### Affectation de l'adresse IP publique à la VM
+
+```Shell
 (oskclient) ko@cdc:~/restos/openstack$ openstack server add floating ip test-say-1 151.242.68.227
 (oskclient) ko@cdc:~/restos/openstack$
 ```
 
 
 ## Connection à la VM
+
+### Ping
 
 ```Shell
 (oskclient) ko@cdc:~/restos/openstack$ ping 151.242.68.227
@@ -337,7 +436,13 @@ PING 151.242.68.227 (151.242.68.227) 56(84) bytes of data.
 --- 151.242.68.227 ping statistics ---
 1 packets transmitted, 1 received, 0% packet loss, time 0ms
 rtt min/avg/max/mdev = 6.788/6.788/6.788/0.000 ms
-(oskclient) ko@cdc:~/restos/openstack$ 
+(oskclient) ko@cdc:~/restos/openstack$
+```
+
+
+### SSH
+
+```Shell
 (oskclient) ko@cdc:~/restos/openstack$ ssh debian@151.242.68.227
 The authenticity of host '151.242.68.227 (151.242.68.227)' can't be established.
 ED25519 key fingerprint is SHA256:4AR4T3PoP1ywI+nvlbV4vKabGtHEGrVdHQ/Y0j314Cg.
@@ -354,6 +459,12 @@ individual files in /usr/share/doc/*/copyright.
 Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 debian@test-say-1:~$ 
+```
+
+
+#### Volumes disques de la VM
+
+```Shell
 debian@test-say-1:~$ df -Thl
 Filesystem     Type      Size  Used Avail Use% Mounted on
 udev           devtmpfs  976M     0  976M   0% /dev
@@ -370,11 +481,23 @@ tmpfs          tmpfs     1.0M     0  1.0M   0% /run/credentials/getty@tty1.servi
 tmpfs          tmpfs     1.0M     0  1.0M   0% /run/credentials/serial-getty@ttyS0.service
 tmpfs          tmpfs     198M  4.0K  198M   1% /run/user/1000
 debian@test-say-1:~$
+```
+
+
+#### Utilisation de mémoire de la VM
+
+```Shell
 debian@test-say-1:~$ free -h
                total        used        free      shared  buff/cache   available
 Mem:           1.9Gi       208Mi       1.7Gi       472Ki       121Mi       1.7Gi
 Swap:             0B          0B          0B
 debian@test-say-1:~$
+```
+
+
+#### Identifica tion du processeur depuis la VM
+
+```Shell
 debian@test-say-1:~$ lscpu
 Architecture:                x86_64
   CPU op-mode(s):            32-bit, 64-bit
@@ -427,4 +550,3 @@ Vulnerabilities:
   Vmscape:                   Not affected
 debian@test-say-1:~$ 
 ```
-
