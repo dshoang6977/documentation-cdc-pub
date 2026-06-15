@@ -12,12 +12,12 @@ type: docs
 
 ## Connexion à la console
 
-- Ouvri son navigateur web favori et aller sur [l'adresse de la Console OpenStack Cloud du Coeur](https://console.aucoeurdu.cloud/).
+- Ouvrir son navigateur web favori et aller sur [l'adresse de la Console OpenStack Cloud du Coeur](https://console.aucoeurdu.cloud/).
 - Une page d'authentification apparaît :
 
-![](page_auth.jpg)
+![Page d'authentification](page_auth.jpg)
 
-- Entrez votre adresse de courriel Resto du Coeur et votre mot de passe.
+- Entrez votre adresse de courriel Restos du Coeur et votre mot de passe.
 - Félicitations, Vous êtes arrivé sur la Console OpenStack :
 
-![](console_os.jpg)
+![Console OpenStack](console_os.jpg)
