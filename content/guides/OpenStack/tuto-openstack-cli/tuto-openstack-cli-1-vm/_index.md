@@ -185,35 +185,6 @@ Error while executing command: ConflictException: 409, Security group rule alrea
 ```
 
 
-###### Accepte les connexions TCP sur les ports IP 5001 à 5002
-
-```Shell
-(oskclient) ko@cdc:~/restos/openstack$ openstack security group rule create --ingress --dst-port 5001:5002 --protocol tcp dsh-sg
-+-------------------------+--------------------------------------+
-| Field                   | Value                                |
-+-------------------------+--------------------------------------+
-| belongs_to_default_sg   | False                                |
-| created_at              | 2026-04-20T20:09:35Z                 |
-| description             |                                      |
-| direction               | ingress                              |
-| ether_type              | IPv4                                 |
-| id                      | 871af9ba-fade-4c29-b9f4-ecfe6fcff1ff |
-| normalized_cidr         | 0.0.0.0/0                            |
-| port_range_max          | 5002                                 |
-| port_range_min          | 5001                                 |
-| project_id              | 58ee6d9139d24a5287e9f81009fe22b8     |
-| protocol                | tcp                                  |
-| remote_address_group_id | None                                 |
-| remote_group_id         | None                                 |
-| remote_ip_prefix        | 0.0.0.0/0                            |
-| revision_number         | 0                                    |
-| security_group_id       | 4962eaec-4238-45b6-99e6-036d5d34b6cd |
-| updated_at              | 2026-04-20T20:09:35Z                 |
-+-------------------------+--------------------------------------+
-(oskclient) ko@cdc:~/restos/openstack$ 
-```
-
-
 ###### Accepte les pings en entrée
 
  ```
