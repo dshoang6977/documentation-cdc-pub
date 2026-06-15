@@ -7,7 +7,7 @@ type: docs
 
 ## Prérequis
 
-- Un poste sous Linux, MacOS, Windows WSL
+- Un poste (physique ou virtuel)) sous Linux, MacOS, Windows WSL
 
 
 ## Création de son environnement virtuel OpenStack
@@ -81,7 +81,44 @@ Et c'est tout.
 
 ## Obtention des identifiants applicatifs
 
-TODO
+Cliquez sur l'icône en forme de petit bonhomme en haut à droite, puis
+cliquez sur `User Center` :
+
+![Menu User Center](menu_go_to_user_center.jpg)
+
+
+Une fois sur la page `User Center`; cliquer dans la barre de navigation à gauche
+sur `Application Credentials` pour afficher la bonne page :
+
+![Creation des identifiants d''application](menu_ucenter_create_appcreds.jpg)
+
+
+La boîte de dialogue `Create Application Credentials` apparaît :
+
+![Boîte de dialogue création d'ientifiants applicatifs](dialog_create_app_creds.jpg)
+
+Remplisser les informations afin de créer votre identifiant applicatif.
+
+Après la création réussie de l'identiant applicatif, un fichier nommé
+d'après la valeur entrée dans le champ `Name` avec l'extension `.json` est
+téléchargé automatiquement par le navigateur web.
+
+Ce fichier JSON contient le secret pour s'authentifier à OpenStack et ne
+pourra pas être téléchargé à nouveau.
+
+
+L'identiant apparaît dans la liste des identiants applicatifs :
+
+![Nouvel identiant applicatif dans la liste](list_app_creds.jpg)
+
+
+Voici comment configurer les variables d'environnement d'authentification
+avec les information du fichier JSON :
+
+- `OS_APPLICATION_CREDENTIAL_ID` : la valeur correspond au champ `id` dans
+  le fichier JSON téléchargé.
+- `OS_APPLICATION_CREDENTIAL_SECRET` : correspond à la valeur du champ
+  `secret` du fichier JSON téléchargé.
 
 
 ## Vérification que les commandes fonctionnent
