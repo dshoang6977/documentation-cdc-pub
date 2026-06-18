@@ -12,4 +12,8 @@ type: docs
 
 ## Création d'un nouveau projet
 
-TODO
+Lorsque votre compte est créé à la première connexion, un projet par
+défaut est créé pour vous avec votre adresse de courriel resto du Coeur.
+
+Si vous avez besoins d'un projet OpenStack supplémentaire, il faudra en
+faire la demande auprès des administrateurs OpenStack.
